@@ -47,59 +47,73 @@ mov r25, r21
 eor r25, r27; a = not w
 
 
-eor r24, r27; not x
+mov r24, r20; b = x
 and r24, r21; w
 push r18
 eor r18, r27
 and r24, r18; not z
-pop r18; end of w!x!z
+pop r18; end of wx!z
 
 push r28
-mov r28, r20; x
+mov r28, r18; z
+eor r28, r19
 push r21
 eor r21, r27
 and r28, r21; not w
-pop r21; end of !wx
-or r24, r28
-pop r28; b = w!x!z + !wx
-
-
-mov r23, r19; y
+pop r21; end of (z xor y)!w
 push r20
 eor r20, r27
-and r23, r20; not x
-pop r20; end of y!x
+and r28, r20; not x
+pop r20
+or r24, r28
+pop r28; b = wx!z + (z xor y)!w!x
+
+
+
+
+mov r23, r18; z
+push r21
+eor r21, r27
+and r23, r21; not w
+pop r21; end of z!w
 
 push r28
 mov r28, r19; y
-push r21
-eor r21, r27
-and r28, r21; !w
-pop r21
+and r28, r21; w
 or r23, r28
-pop r28; c = y!x + y!w
+pop r28; c = yw+z!w
 
 push r28
-mov r28,r21; w
-and r28, r20; wx
+mov r28,r20; x
+and r28, r19; yx
+or r23, r28
+pop r28; c=yw+z!w+yx
+
+push r28
+push r18
+eor r18,r27
+mov r28 ,r18
+pop r18
 push r19
-eor r19, r27
-and r28, r19; wx!y
+eor r19,r27
+and r28,r19
 pop r19
-or r23, r28
-pop r28; c = y!x + y!w + wx!y
-
+push r20
+eor r20,r27
+and r28,r20
+pop r20
 push r21
-eor r21, r27
-and r22, r21; z!w
+eor r21,r27
+and r28,r21
 pop r21
+mov r22, r28
+pop r28;!Z!X!Y!W
 
-push r28
-mov r28, r19; y
-and r28, r20; x
-and r28, r21; w 
-or r22, r28 d = wxy + z!w
-pop r28
+push r28 
+mov r28,r18;z
+and r28,r21;zw
+or r22,r28
+pop r28;d=!z!x!y!w + zw
 
 
 

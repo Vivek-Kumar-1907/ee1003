@@ -19,24 +19,16 @@ int main (void)
 	DDRB    &= ~(1 << PB1);
 	DDRB    |= ((1 << PB5));
 	TCCR0B  = 0b00000101;
-	uint8_t flag = 1;
 	while (1) {
 		uint8_t w = (PIND >> PD6 ) & 1;
 	        uint8_t x = (PIND >> PD7) & 1;
 	        uint8_t y = (PINB >> PB0) & 1;
 		uint8_t z = (PINB >> PB1) & 1;
-		
-		uint8_t A = 0;
-		uint8_t B =((!z) & x & w) | ((z^y) & (!x) & (!w));
-		uint8_t C = (z & (!w) ) | (y & w) | (x & y);
-		uint8_t D = ((!z)&(!y)&(!x)&(!w)) | (z&w);
-		if(flag == 1){
-			A = 0;
-			B = 0;
-			C = 0;
-			D = 0;
-			flag = 0;
-		}
+
+		uint8_t A = (!w);
+		uint8_t B = (w & (!x) & (!z)) | ((!w) & x);
+		uint8_t C = ((!x) & y) | ((!w) & y) | (w & x & (!y));
+		uint8_t D = ((!w) & z) | (w & x & y);
 		PORTD &= ~((1<<PD2) | (1<<PD3) | (1<<PD4) | (1<<PD5));
 		PORTD |= (A << PD2);
 		PORTD |= (B << PD3);
