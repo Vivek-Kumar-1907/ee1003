@@ -1,4 +1,8 @@
 #include <stdio.h>
+#include <unistd.h>
+#include <arpa/inet.h>
+#include <string.h>
+
 #define PI 3.141592
 
 struct Stack{
@@ -448,15 +452,59 @@ float evalpostfix(int n, char str[100][100]){
     return st.arr[st.top];
 }
 
-int main(){
-    int n2 = 8;
-    char str2[100][100] = {"3", "2", "^", "4", "2", "^", "+", "root"};
-    float res2 = evalpostfix(n2, str2);
-    printf("res: %f\n", res2);
-    
-    char exp[100] = "500 / 128.000006";
-    char str[100][100];
-    int n = shuntingyard(exp, str);
-    float res = evalpostfix(n, str);
-    printf("final res: %f\n", res);
+//int main(){    
+//    char exp[100] = "500 / 128.000006";
+//    char str[100][100];
+//    int n = shuntingyard(exp, str);
+//    float res = evalpostfix(n, str);
+//    printf("final res: %f\n", res);
+//}
+
+int main()
+{
+    int server_fd, client_fd;
+    struct sockaddr_in addr;
+    char buffer[4096];
+    int bytes;
+    int total = 0;
+
+    server_fd = socket(AF_INET, SOCK_STREAM, 0);
+
+    addr.sin_family = AF_INET;
+    addr.sin_port = htons(8080);
+    addr.sin_addr.s_addr = INADDR_ANY;
+
+    bind(server_fd, (struct sockaddr*)&addr, sizeof(addr));
+    listen(server_fd, 5);
+
+    printf("Server running on http://localhost:8080\n");
+
+    while (1) {
+        client_fd = accept(server_fd, NULL, NULL);
+
+        total = 0;
+        memset(buffer, 0, sizeof(buffer));
+
+        while ((bytes = read(client_fd,
+                              buffer + total,
+                              sizeof(buffer) - total - 1)) > 0)
+        {
+            total += bytes;
+
+            if (strstr(buffer, "\r\n\r\n"))
+                break;
+        }
+
+        printf("REQUEST RECEIVED:\n%s\n", buffer);
+
+        const char *response =
+            "HTTP/1.1 200 OK\r\n"
+            "Content-Type: text/plain\r\n"
+            "Access-Control-Allow-Origin: *\r\n"
+            "\r\n"
+            "OK";
+
+        write(client_fd, response, strlen(response));
+        close(client_fd);
+    }
 }
