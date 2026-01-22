@@ -423,6 +423,16 @@ $('#eq').click(()=>{
         $('#res').text("0");
     }
     $('#res').text(res);
+
+    fetch("http://localhost:8080")
+        .then(response => response.text())
+        .then(data => {
+	    alert(data);
+            $('document').text(data);
+        })
+        .catch(err => {
+            console.error(err);
+        });
 });	
     </script> 
   </body>
