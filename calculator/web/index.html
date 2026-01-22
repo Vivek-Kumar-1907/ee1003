@@ -411,6 +411,7 @@ $('#eq').click(()=>{
 		evalstr.pop();
 	   if(isoperator(evalstr[evalstr.length-1]))
 		evalstr.pop();
+    evalstr.push('');
     let res = '';
     for(let i = 0; i<evalstr.length; i++){
         res += evalstr[i];
