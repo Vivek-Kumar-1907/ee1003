@@ -44,13 +44,24 @@ function addpoint(){
 }
 
 function addoperator(a){
-    if(evalstr.length == 1 && evalstr[0] == '' && a!=3)
-        return;
+    if(evalstr.length == 1 && evalstr[0] == ''){
+	if(a!=3)
+        	return;
+	else{
+		num(0);
+	}
+    }
     if(evalstr[evalstr.length-1] == '')
         evalstr.pop();
-    if(evalstr[evalstr.length-1] == '(' && a!=3){
-        evalstr.push('');
-        return;
+    if(evalstr[evalstr.length-1] == '('){
+	if(a!=3){
+        	evalstr.push('');
+        	return;
+	}
+	else{
+		evalstr.push('');
+		num(0);	
+	}
     }
     if(isoperator(evalstr[evalstr.length-1])){
         if(evalstr[evalstr.length-2] == '(' || evalstr.length == 1){
@@ -217,7 +228,7 @@ $('#clear').dblclick(function(){
 });
 
 for(let i=0;i<=9;i++){
-    $('#'+i).click(()=>{num(i);});
+    $('#'+i).on('click touchstart', ()=>{num(i);});
 }
 
 $('#point').click(()=>{addpoint();});
@@ -236,7 +247,7 @@ $(document).click(()=>{
 });
 
 for(let i = 1; i<=4; i++){
-    $('#op'+i).click(()=>{addoperator(i);});
+    $('#op'+i).on('click touchstart', ()=>{addoperator(i);});
 }
 
 $('#lbrak').click(()=>{addlbrak();});
