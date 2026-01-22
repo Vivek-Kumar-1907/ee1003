@@ -21,42 +21,48 @@
     <h1 class="my-3 mx-3 text-white-50">Calculator</h1>
     <div class = "container-sm mx-3 border border-danger w-50 bg-secondary rounded">
       <h6 class="text-white-50 text-end m-2" id="curr">Calculator Ready!</h6>
-      <h6 class="text-white text-lg-end mx-2">10.14</h6>
+      <h6 class="text-white text-lg-end mx-2" id ="res">0</h6>
     </div>
         <div class="container-fluid my-1" role="group" aria-label=         "button-container">
             <button type="button" class="btn btn-secondary btn-lg" id = "clear">&#xFF23;</button>
             <button type="button" class="btn btn-secondary btn-lg" id = "lbrak">&#xFF08;</button>
             <button type="button" class="btn btn-secondary btn-lg" id = "rbrak" >&#xFF09;</button>
             <button type="button" class="btn btn-outline-warning btn-lg" id = "op1">&div;</button>
+            <button type="button" class="btn btn-outline-success btn-lg" id = "f1">&#x03C0;</button>
     </div>
         <div class="container-fluid my-1" role="group" aria-label=         "button-container">
             <button type="button" class="btn btn-secondary btn-lg" id = "7">&#xFF17;</button>
             <button type="button" class="btn btn-secondary btn-lg" id = "8" >&#xFF18;</button>
             <button type="button" class="btn btn-secondary btn-lg" id = "9">&#xFF19;</button>
             <button type="button" class="btn btn-outline-warning btn-lg" id = "op2">&times;</button>
+            <button type="button" class="btn btn-outline-success btn-lg" id = "f2">e</button>
     </div>
 <div class="container-fluid my-1" role="group" aria-label=         "button-container">
             <button type="button" class="btn btn-secondary btn-lg" id = "4">&#xFF14;</button>
             <button type="button" class="btn btn-secondary btn-lg" id = "5">&#xFF15;</button>
             <button type="button" class="btn btn-secondary btn-lg" id = "6">&#xFF16;</button>
             <button type="button" class="btn btn-outline-warning btn-lg" id = "op3">&minus;</button>
+            <button type="button" class="btn btn-outline-success btn-lg" id = "f3">|x|</button>
     </div>
     <div class="container-fluid my-1" role="group" aria-label=         "button-container">
             <button type="button" class="btn btn-secondary btn-lg" id = "1" >&#xFF11;</button>
             <button type="button" class="btn btn-secondary btn-lg" id = "2" >&#xFF12;</button>
             <button type="button" class="btn btn-secondary btn-lg" id = "3">&#xFF13;</button>
             <button type="button" class="btn btn-outline-warning btn-lg" id = "op4">+</button>
+            <button type="button" class="btn btn-outline-success btn-lg" id = "f4">&#x221A;x</button>
     </div><div class="container-fluid my-1" role="group" aria-label=         "button-container">
-            <button type="button" class="btn btn-secondary btn-lg" id = "S">&#xFF33;</button>
+            <button type="button" class="btn btn-secondary btn-lg" id = "switch">&#xFF33;</button>
             <button type="button" class="btn btn-secondary btn-lg" id = "0">&#xFF10;</button>
             <button type="button" class="btn btn-secondary btn-lg" id = "point">&#xFF0E;</button>
             <button type="button" class="btn btn-outline-warning btn-lg" id = "eq">=</button>
+            <button type="button" class="btn btn-outline-success btn-lg" id = "f5">x&#x02b8;</button>
     </div>
 
 
     <script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery.longclicks@1.0.0/plugin/jquery.longclicks.min.js"></script>
     <script src="main.js"></script>
   </body>
 </html>
