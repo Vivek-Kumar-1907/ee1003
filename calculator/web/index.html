@@ -407,9 +407,10 @@ $('#eq').click(()=>{
             itr --;
         }
     }
-	   if(isoperator(evalstr[evalstr.length-1])){
+	   if(evalstr[evalstr.length-1] == '')
 		evalstr.pop();
-	}
+	   if(isoperator(evalstr[evalstr.length-1]))
+		evalstr.pop();
     let res = '';
     for(let i = 0; i<evalstr.length; i++){
         res += evalstr[i];
