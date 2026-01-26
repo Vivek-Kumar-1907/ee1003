@@ -147,14 +147,26 @@ float arctan_x(float x){
 }
 
 float power_x(float x, float w){
-    if(x < 1)
-        return 1/power_x(1/x, w);
+    if(x < 0 ){
+        int floorw = (int)w;
+        int isintw = mod_x(w - (float)floorw) < 0.00001;
+        if(isintw){
+            if(floorw % 2 == 0)
+                return power_x(-x, w);
+            else
+                return -power_x(-x,w);
+        }
+        else
+            return 1.0/0.0;
+    }
     if(x == 0){
         if(w > 0)
             return 0;
         else
             return 1.0/0.0;
     }
+    if(x < 1)
+        return 1/power_x(1/x, w);
     return single_nxt_itr(4, w, 1, 1, 0.01, 100*(x-1));
 }
 
