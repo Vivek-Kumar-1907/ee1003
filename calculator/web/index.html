@@ -271,6 +271,16 @@ function setmode(md){
         $('#f' + (i+1)).text(setstrings[i]);
 }
 
+function updateBrak(){
+    bal = 0;
+    for(let i = 0; i<evalstr.length; i++){
+        if(evalstr[i] == '(')
+            bal++;
+        else if(evalstr[i] == ')')
+            bal --;
+    }
+}
+
 $("#clear").click(function(){
     if(!isNaN(evalstr[evalstr.length-1]) && evalstr[evalstr.length - 1] > 1){
         evalstr[evalstr.length-1] = evalstr[evalstr.length-1].substring(0, evalstr[evalstr.length - 1].length - 1);
@@ -287,10 +297,12 @@ $("#clear").click(function(){
     if(evalstr.length == 0){
         evalstr = [''];
     }
+    updateBrak();
 });
 
 $('#clear').dblclick(function(){
     evalstr = [''];
+    updateBrak();
 });
 
 for(let i=0;i<=9;i++){
@@ -408,10 +420,11 @@ $('#eq').click(()=>{
         }
     }
 	   if(evalstr[evalstr.length-1] == '')
-		evalstr.pop();
+	    evalstr.pop();
 	   if(isoperator(evalstr[evalstr.length-1]))
 		evalstr.pop();
-    evalstr.push('');
+    if(isNaN(evalstr[evalstr.length-1]))
+        evalstr.push('');
     let res = '';
     for(let i = 0; i<evalstr.length; i++){
         res += evalstr[i];
@@ -424,15 +437,21 @@ $('#eq').click(()=>{
     }
     $('#res').text(res);
 
-    fetch("http://localhost:8080")
+    fetch("http://127.0.0.1:8080", {
+        method: "POST",
+        headers: {
+            "Content-Type": "text/plain",
+        },
+        body: res
+    })
         .then(response => response.text())
         .then(data => {
-	    alert(data);
-            $('document').text(data);
+	        $('#res').text(data);
         })
         .catch(err => {
             console.error(err);
         });
+    updateBrak();
 });	
     </script> 
   </body>
