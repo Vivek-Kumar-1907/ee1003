@@ -16,11 +16,12 @@ struct Operators{
     char str[100][100];
 };
 
-void push_op(struct Operators * st, int n, char str[100]){
+int push_op(struct Operators * st, int n, char stra[100], int idx){
 	st->top ++;
 	for(int i = 0; i<n; i++)
-		st->str[st->top][i] = str[i];
+		st->str[st->top][i] = stra[i];
 	st->str[st->top][n] = '\0';
+    return idx;
 }
 
 int pop_op(struct Operators * st, char str[100]){
@@ -196,14 +197,14 @@ int shuntingyard(char expr[100], char str[100][100]){
      struct Operators operators;
      operators.top = -1;
      int len = 0;
-     int idx = 0, temp_idx = 0;
+     int idx = 0;
      int unmatched_braks = 0;
      for(int i = 0; i<100; i++)
 	     if(expr[i] != '\0'){ len ++;}
      for(int i = 0; i<len; i++){
 	char c = expr[i];
 	if(checkdigit(c)){
-		int j = i;
+       	int j = i;
 		while(checkdigit(expr[j])){
 			str[idx][j-i] = expr[j];
 			j++;
@@ -215,70 +216,69 @@ int shuntingyard(char expr[100], char str[100][100]){
      	}
 	else if(c == 's'){
 		char funct[100] = "sin";
-		push_op(&operators, 3, funct);
+		push_op(&operators, 3, funct, idx);
 		i += 3;
 		continue;
 	}
 	else if(c == 'c'){
 		char funct[100] = "cos";
-		push_op(&operators, 3, funct);
+		push_op(&operators, 3, funct, idx);
 		i += 3;
 		continue;
 	}
 	else if(c == 't'){
 		char funct[100] = "tan";
-		push_op(&operators, 3, funct);
+		push_op(&operators, 3, funct, idx);
 		i += 3;
 		continue;
 	}
 	else if(c == 'l'){
 		char funct[100] = "ln";
-		push_op(&operators, 2, funct);
+		push_op(&operators, 2, funct, idx);
 		i+=2;
 		continue;
 	}
 	else if(c == 'f'){
 		char funct[100] = "fac";
-		push_op(&operators, 3, funct);
+		push_op(&operators, 3, funct, idx);
 		i += 3;
 		continue;
 	}
 	else if(c == 'm'){
 		char funct[100] = "mod";
-		push_op(&operators, 3, funct);
+		push_op(&operators, 3, funct, idx);
 		i += 3;
 		continue;
 	}
 	else if(c == 'r'){
 		char funct[100] = "root\0";
-		push_op(&operators, 5, funct);
+		push_op(&operators, 5, funct, idx);
 		i += 4;
 		continue;
 	}
 	else if(c == 'a'){
 		if(expr[i+3] == 's'){
 			char funct[100] = "arcsin";
-			push_op(&operators, 6, funct);
+			push_op(&operators, 6, funct, idx);
 			i += 6;
 			continue;
 		}
 		else if(expr[i+3] == 'c'){
 			char funct[100] = "arccos";
-			push_op(&operators, 6, funct);
+			push_op(&operators, 6, funct, idx);
 			i += 6;
 			continue;
 		}
 		if(expr[i+3] == 't'){
 			char funct[100] = "arctan";
-			push_op(&operators, 6, funct);
+			push_op(&operators, 6, funct, idx);
 			i += 6;
 			continue;
 		}
 	}
 	else if(c == '('){
 		char lbrak[100] = "(";
-		push_op(&operators, 1, lbrak);
-		i+=1;
+		push_op(&operators, 1, lbrak, idx);
 		unmatched_braks ++;
 		continue;
 	}
@@ -294,7 +294,7 @@ int shuntingyard(char expr[100], char str[100][100]){
 		char opr[100];
 		pop_op(&operators, opr);
 		unmatched_braks --;
-		if(!is_op(operators.str[operators.top][0])){
+		if(!is_op(operators.str[operators.top][0]) && operators.top >= 0){
 			char opr[100];
 			int a = pop_op(&operators, opr);
 			for(int i = 0; i<a; i++){
@@ -314,15 +314,15 @@ int shuntingyard(char expr[100], char str[100][100]){
 		}
 		char newop[100];
 		newop[0] = c;
-		push_op(&operators, 1, newop);
+        newop[1] = '\0';
+		idx = push_op(&operators, 1, newop, idx);
 	}
      }
 	while(operators.top >= 0){
 		char opr[100];
-		int a = pop_op(&operators, opr); 
-		for(int i = 0; i<a; i++){
+		int a = pop_op(&operators, opr);
+		for(int i = 0; i<a; i++)
 			str[idx][i] = opr[i];
-		}
 		idx++;	
 	}
 	return idx;
@@ -378,9 +378,6 @@ float evalpostfix(int n, char str[100][100]){
             if(str[i][0] == '+'){
 		        float a = pop(&st);
 		        float b = pop(&st);
-                char test[100] = "23";
-                printf("%f\n", num(test));
-                printf("%f %f\n", a, b);
                 float sum = a + b;
                 push(&st, sum);
             }
@@ -461,14 +458,6 @@ float evalpostfix(int n, char str[100][100]){
     }
     return st.arr[st.top];
 }
-
-//int main(){    
-//    char exp[100] = "500 / 128.000006";
-//    char str[100][100];
-//    int n = shuntingyard(exp, str);
-//    float res = evalpostfix(n, str);
-//    printf("final res: %f\n", res);
-//}
 
 int main()
 {
