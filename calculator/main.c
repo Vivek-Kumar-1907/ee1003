@@ -293,7 +293,7 @@ int shuntingyard(char expr[100], char str[100][100]){
 		char opr[100];
 		pop_op(&operators, opr);
 		unmatched_braks --;
-		if(!is_op(operators.str[operators.top][0]) && operators.top >= 0){
+		if(!is_op(operators.str[operators.top][0]) && operators.top >= 0 && operators.str[operators.top][0] != '(' && operators.str[operators.top][0] != ')' ){
 			char opr[100];
 			int a = pop_op(&operators, opr);
 			for(int i = 0; i<a; i++){
