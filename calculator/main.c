@@ -2,6 +2,7 @@
 #include <unistd.h>
 #include <arpa/inet.h>
 #include <string.h>
+#include <stdlib.h>
 
 #define PI 3.141592
 
@@ -116,6 +117,10 @@ float ln_x(float x){
         return -1.0f/0.0;
     if(x < 1)
         return -single_nxt_itr(1, 0, 1, 0, 0.01, 100*((1/x)-1));
+    if(x == 1)
+        return 0;
+    if(x > 1 && x<2)
+        return single_nxt_itr(1, 0, 1, 0, 0.0001, 10000*(x-1));
     return single_nxt_itr(1, 0, 1, 0, 0.01, 100*(x-1));
 }
 
@@ -344,7 +349,7 @@ float num(char str[100]){
     }
     if(flag == 0){
         for(int i = 0; i<len; i++){
-            num += (str[i] - '0') * power_x(10, len-i-1);
+            num += (str[i] - '0') * power_10(len-i-1);
         }
     }
     else{
@@ -369,8 +374,11 @@ float evalpostfix(int n, char str[100][100]){
         }
         else{
             if(str[i][0] == '+'){
-		float a = pop(&st);
-		float b = pop(&st);
+		        float a = pop(&st);
+		        float b = pop(&st);
+                char test[100] = "23";
+                printf("%f\n", num(test));
+                printf("%f %f\n", a, b);
                 float sum = a + b;
                 push(&st, sum);
             }
@@ -485,26 +493,69 @@ int main()
         total = 0;
         memset(buffer, 0, sizeof(buffer));
 
+        int content_length = 0;
+        int header_len = 0;
+        char *header_end = NULL;
+
         while ((bytes = read(client_fd,
                               buffer + total,
                               sizeof(buffer) - total - 1)) > 0)
         {
             total += bytes;
-
+            buffer[total] = '\0';
+            if (header_end == NULL) {
+                header_end = strstr(buffer, "\r\n\r\n");
+                if (header_end) {
+                    header_len = (header_end - buffer) + 4;
+                    char *cl_ptr = strstr(buffer, "Content-Length:");
+                    if (cl_ptr) {
+                        content_length = atoi(cl_ptr + 15);
+                    }
+                }
+            }
+            if (header_end) {
+                int body_received = total - header_len;
+                if (body_received >= content_length) {
+                    break;
+                }
+            }
             if (strstr(buffer, "\r\n\r\n"))
                 break;
         }
-
+        char *body = NULL;
+        char *header_end_ptr = strstr(buffer, "\r\n\r\n");
+        if (header_end_ptr) {
+            body = header_end_ptr + 4; 
+        }
         printf("REQUEST RECEIVED:\n%s\n", buffer);
-
-        const char *response =
-            "HTTP/1.1 200 OK\r\n"
+        char response[1000] = "HTTP/1.1 200 OK\r\n"
             "Content-Type: text/plain\r\n"
             "Access-Control-Allow-Origin: *\r\n"
-            "\r\n"
-            "OK";
+            "\r\n";
+        
+        int resp_len = 0;
+        int lc = 4;
+        while(lc)
+            if(response[resp_len++] == '\n'){lc--;}
 
-        write(client_fd, response, strlen(response));
+        float res = 0;
+
+        if(body && content_length > 0){
+            char str[100][100];
+            int n = shuntingyard(body, str);
+            res = evalpostfix(n, str);
+            printf("Input string %s\n", body);
+            printf("final res: %f\n", res);
+        }
+
+        char out[100];
+        sprintf(out, "%f", res);
+
+        for(int i = resp_len; i<resp_len+strlen(out); i++)
+            response[i] = out[i-resp_len];
+        printf("%d\n", resp_len);
+        printf("%s\n", response);
+        write(client_fd, response, resp_len + strlen(out));
         close(client_fd);
     }
 }
