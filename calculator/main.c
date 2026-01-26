@@ -67,6 +67,7 @@ float func(float x, float y, float w, int a){
         case 4: return w*y/x;
         break;
     }
+    return 0;
 }
 
 float single_nxt_itr(int a, float w, float t_n, float y_n, float h, int n){
@@ -162,6 +163,7 @@ float power_10(int x){
         return 1;
     if(x < 0)
         return 1/power_10(-x);
+    return 1;
 }
 
 float factorial(int x){
