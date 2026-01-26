@@ -16,12 +16,11 @@ struct Operators{
     char str[100][100];
 };
 
-int push_op(struct Operators * st, int n, char stra[100], int idx){
+void push_op(struct Operators * st, int n, char stra[100]){
 	st->top ++;
 	for(int i = 0; i<n; i++)
 		st->str[st->top][i] = stra[i];
 	st->str[st->top][n] = '\0';
-    return idx;
 }
 
 int pop_op(struct Operators * st, char str[100]){
@@ -216,69 +215,69 @@ int shuntingyard(char expr[100], char str[100][100]){
      	}
 	else if(c == 's'){
 		char funct[100] = "sin";
-		push_op(&operators, 3, funct, idx);
+		push_op(&operators, 3, funct);
 		i += 3;
 		continue;
 	}
 	else if(c == 'c'){
 		char funct[100] = "cos";
-		push_op(&operators, 3, funct, idx);
+		push_op(&operators, 3, funct);
 		i += 3;
 		continue;
 	}
 	else if(c == 't'){
 		char funct[100] = "tan";
-		push_op(&operators, 3, funct, idx);
+		push_op(&operators, 3, funct);
 		i += 3;
 		continue;
 	}
 	else if(c == 'l'){
 		char funct[100] = "ln";
-		push_op(&operators, 2, funct, idx);
+		push_op(&operators, 2, funct);
 		i+=2;
 		continue;
 	}
 	else if(c == 'f'){
 		char funct[100] = "fac";
-		push_op(&operators, 3, funct, idx);
+		push_op(&operators, 3, funct);
 		i += 3;
 		continue;
 	}
 	else if(c == 'm'){
 		char funct[100] = "mod";
-		push_op(&operators, 3, funct, idx);
+		push_op(&operators, 3, funct);
 		i += 3;
 		continue;
 	}
 	else if(c == 'r'){
 		char funct[100] = "root\0";
-		push_op(&operators, 5, funct, idx);
+		push_op(&operators, 5, funct);
 		i += 4;
 		continue;
 	}
 	else if(c == 'a'){
 		if(expr[i+3] == 's'){
 			char funct[100] = "arcsin";
-			push_op(&operators, 6, funct, idx);
+			push_op(&operators, 6, funct);
 			i += 6;
 			continue;
 		}
 		else if(expr[i+3] == 'c'){
 			char funct[100] = "arccos";
-			push_op(&operators, 6, funct, idx);
+			push_op(&operators, 6, funct);
 			i += 6;
 			continue;
 		}
 		if(expr[i+3] == 't'){
 			char funct[100] = "arctan";
-			push_op(&operators, 6, funct, idx);
+			push_op(&operators, 6, funct);
 			i += 6;
 			continue;
 		}
 	}
 	else if(c == '('){
 		char lbrak[100] = "(";
-		push_op(&operators, 1, lbrak, idx);
+		push_op(&operators, 1, lbrak);
 		unmatched_braks ++;
 		continue;
 	}
@@ -315,7 +314,7 @@ int shuntingyard(char expr[100], char str[100][100]){
 		char newop[100];
 		newop[0] = c;
         newop[1] = '\0';
-		idx = push_op(&operators, 1, newop, idx);
+		push_op(&operators, 1, newop);
 	}
      }
 	while(operators.top >= 0){
