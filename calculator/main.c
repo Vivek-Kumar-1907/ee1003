@@ -8,22 +8,22 @@
 
 struct Stack{
     int top;
-    float arr[100];
+    float arr[1000];
 };
 
 struct Operators{
     int top;
-    char str[100][100];
+    char str[80][8];
 };
 
-void push_op(struct Operators * st, int n, char stra[100]){
+void push_op(struct Operators * st, int n, char stra[8]){
 	st->top ++;
 	for(int i = 0; i<n; i++)
 		st->str[st->top][i] = stra[i];
 	st->str[st->top][n] = '\0';
 }
 
-int pop_op(struct Operators * st, char str[100]){
+int pop_op(struct Operators * st, char str[8]){
 	int len = 0;
 	while(st->str[st->top][len++] != '\0');
 	for(int i = 0; i<len; i++)
@@ -127,6 +127,10 @@ float ln_x(float x){
 
 
 float arcsin_x(float x){
+    if(x > 1)
+        return (PI/2);
+    if(x < -1)
+        return -(PI/2);
     if(x < 0)
         return -arcsin_x(-x);
     return single_nxt_itr(3, 0, 0, 0, 0.00001, 100000*x);
@@ -137,6 +141,8 @@ float arccos_x(float x){
 }
 
 float arctan_x(float x){
+    if(x < 0)
+        return -arctan_x(-x);
     return single_nxt_itr(2, 0, 0, 0, 0.01, 100*x);
 }
 
@@ -170,7 +176,7 @@ float factorial(int x){
     return (x<2)?1:x*factorial(x-1);
 }
 
-int isnum(char str[100]){
+int isnum(char str[15]){
     int num = str[0] - '0';
     if(num >= 0 && num < 10){
         return 1;
@@ -192,7 +198,7 @@ int is_op(char c){
 	return 0;
 }
 
-int shuntingyard(char expr[100], char str[100][100]){
+int shuntingyard(char expr[1000], char str[100][15]){
      struct Operators operators;
      operators.top = -1;
      int len = 0;
@@ -214,87 +220,87 @@ int shuntingyard(char expr[100], char str[100][100]){
 		continue;
      	}
 	else if(c == 's'){
-		char funct[100] = "sin";
+		char funct[8] = "sin";
 		push_op(&operators, 3, funct);
 		i += 3;
 		continue;
 	}
 	else if(c == 'c'){
-		char funct[100] = "cos";
+		char funct[8] = "cos";
 		push_op(&operators, 3, funct);
 		i += 3;
 		continue;
 	}
 	else if(c == 't'){
-		char funct[100] = "tan";
+		char funct[8] = "tan";
 		push_op(&operators, 3, funct);
 		i += 3;
 		continue;
 	}
 	else if(c == 'l'){
-		char funct[100] = "ln";
+		char funct[8] = "ln";
 		push_op(&operators, 2, funct);
 		i+=2;
 		continue;
 	}
 	else if(c == 'f'){
-		char funct[100] = "fac";
+		char funct[8] = "fac";
 		push_op(&operators, 3, funct);
 		i += 3;
 		continue;
 	}
 	else if(c == 'm'){
-		char funct[100] = "mod";
+		char funct[8] = "mod";
 		push_op(&operators, 3, funct);
 		i += 3;
 		continue;
 	}
 	else if(c == 'r'){
-		char funct[100] = "root\0";
+		char funct[8] = "root\0";
 		push_op(&operators, 5, funct);
 		i += 4;
 		continue;
 	}
 	else if(c == 'a'){
 		if(expr[i+3] == 's'){
-			char funct[100] = "arcsin";
+			char funct[8] = "arcsin";
 			push_op(&operators, 6, funct);
 			i += 6;
 			continue;
 		}
 		else if(expr[i+3] == 'c'){
-			char funct[100] = "arccos";
+			char funct[8] = "arccos";
 			push_op(&operators, 6, funct);
 			i += 6;
 			continue;
 		}
 		if(expr[i+3] == 't'){
-			char funct[100] = "arctan";
+			char funct[8] = "arctan";
 			push_op(&operators, 6, funct);
 			i += 6;
 			continue;
 		}
 	}
 	else if(c == '('){
-		char lbrak[100] = "(";
+		char lbrak[8] = "(";
 		push_op(&operators, 1, lbrak);
 		unmatched_braks ++;
 		continue;
 	}
 	else if(c == ')'){
 		while(operators.str[operators.top][0] != '('){
-			char opr[100];
+			char opr[8];
 			int a = pop_op(&operators, opr); 
 			for(int i = 0; i<a; i++){
 			     str[idx][i] = opr[i];
 			}
 			idx++;
 		}
-		char opr[100];
+		char opr[8];
 		pop_op(&operators, opr);
 		unmatched_braks --;
 		if(!is_op(operators.str[operators.top][0]) && operators.top >= 0 && operators.str[operators.top][0] != '(' && operators.str[operators.top][0] != ')' ){
-			char opr[100];
+			char opr[8];
 			int a = pop_op(&operators, opr);
 			for(int i = 0; i<a; i++){
 			     str[idx][i] = opr[i];
@@ -304,21 +310,21 @@ int shuntingyard(char expr[100], char str[100][100]){
 	}
 	else if(is_op(c) > 0){
 		while(operators.top >= 0 && (is_op(c) <= is_op(operators.str[operators.top][0]))){
-			char opr[100];
+			char opr[8];
 			int a = pop_op(&operators, opr); 
 			for(int i = 0; i<a; i++){
 			     str[idx][i] = opr[i];
 			}
 			idx++;	
 		}
-		char newop[100];
+		char newop[8];
 		newop[0] = c;
         newop[1] = '\0';
 		push_op(&operators, 1, newop);
 	}
      }
 	while(operators.top >= 0){
-		char opr[100];
+		char opr[8];
 		int a = pop_op(&operators, opr);
 		for(int i = 0; i<a; i++)
 			str[idx][i] = opr[i];
@@ -366,7 +372,7 @@ float num(char str[100]){
     return num;
 }
 
-float evalpostfix(int n, char str[100][100]){
+float evalpostfix(int n, char str[100][15]){
     struct Stack st;
     st.top = -1;
     for(int i = 0; i<n; i++){
@@ -531,7 +537,7 @@ int main()
         float res = 0;
 
         if(body && content_length > 0){
-            char str[100][100];
+            char str[100][15];
             int n = shuntingyard(body, str);
             res = evalpostfix(n, str);
             printf("Input string %s\n", body);
