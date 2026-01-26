@@ -80,7 +80,7 @@ function num(a){
         evalstr.pop();
         evalstr.push('*');
         evalstr.push('');
-    }   
+    }
     evalstr[evalstr.length - 1] += a;
     console.log(evalstr);
 }
@@ -192,7 +192,8 @@ function addrbrak(){
 
 function addconstant(c){
     if(!isNaN(evalstr[evalstr.length-1])){
-        addoperator(2);
+        if(evalstr[evalstr.length-1] != '')
+            addoperator(2);
     }
     switch(c){
         case 'pi': num(3.141592);
