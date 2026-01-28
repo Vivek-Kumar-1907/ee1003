@@ -1,0 +1,181 @@
+\documentclass[conference]{IEEEtran}
+\usepackage{gvv-book}
+\usepackage{gvv}
+%\IEEEoverridecommandlockouts
+\usepackage{tabularx}
+\usepackage{placeins}
+\usepackage{cite}
+\usepackage{enumitem}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{makecell}
+\usepackage{listings}
+\usepackage{xurl}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{float}
+
+\urldef{\androidsdkurl}\url{https://developer.android.com/studio#:~:text=Command%20line%20tools%20.}
+
+\lstset{
+  basicstyle=\ttfamily\small,
+  keywordstyle=\color{blue}\bfseries,
+  commentstyle=\color{green!40!black},
+  stringstyle=\color{red},
+  numbers=left,                     % keep numbers
+  numberstyle=\scriptsize\ttfamily, % more readable numbers
+  numbersep=8pt,                    % add spacing from code
+  xleftmargin=1.5em,                % indent code so numbers don’t overlap
+  frame=single,
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=2,
+  showstringspaces=false,
+  captionpos=b,
+  keepspaces=true                   % preserve spacing properly
+}
+
+\title{Creating a calculator app on android}
+
+\author{
+\IEEEauthorblockN{Jnanesh Satisha Karmar, Vivek Kumrakali Kumar}
+\IEEEauthorblockA{
+Department of Electrical Engineering\\
+IIT Hyderabad\\
+Email: ee25btech11029@iith.ac.in, ee25btech11062@iith.ac.in}
+}
+
+\begin{document}
+
+\maketitle
+
+\section{Motivation}
+This project goes over the possibility of development of Android apps on Android through Termux and Android SDK. The idea is to have an android app with a webview which can load HTML strings. An endless variety of UI and functionalities can be implemented through this method. We specifically implement a full-stack calculator app in this case, with HTML, CSS and bootstrap, vanilla Javascript running on a webview in an android app on the front-end fully within the limits of an android device. We also have a local server running fully within the device, accepting requests in the backend. Here, we emphasise on the instructions to get such a calculator app running on an android device.
+
+\section{Prerequisites}
+Set Termux up on your android device. The instructions to do so can be found here -
+\fbox{\parbox{\linewidth}{\url{https://github.com/gadepall/fwc-1}}}
+
+Inside debian, you will need to install a jdk (Java Development Kit) and gcc, a C Compiler.
+\begin{lstlisting}
+    pkg install openjdk-17
+    apt -get install gcc
+\end{lstlisting}
+
+\section{Setting up Android SDK}
+Download the SDK from the official Android Developers website 
+\fbox{\parbox{\linewidth}{\androidsdkurl}}
+
+Copy the link for linux platform and download it inside a folder named android preferably inside home directory in debian using
+\begin{lstlisting}
+cd ~
+mkdir android
+cd android
+wget <your zip link>
+\end{lstlisting}
+
+Inside the android folder, unzip the file you just downloaded
+\begin{lstlisting}
+mv ~/commandlinetools-XXX_latest.zip ./
+unzip commandlinetools-XXX_latest.zip
+rm commandlinetools-XXX_latest.zip
+\end{lstlisting}
+
+Now we need to slightly reorganize the folder structure. Inside android folder,
+\begin{lstlisting}
+  cd cmdline-tools
+  mkdir tools
+  mv * tools
+\end{lstlisting}
+
+Edit the .bashrc file to include the \$ANDROID\_HOME environment variable using the text editor of your choice.
+\begin{lstlisting}
+nvim ~/.bashrc
+\end{lstlisting}
+
+Add these lines to the .bashrc file
+
+\begin{lstlisting}
+export ANDROID_HOME=$HOME/android
+export PATH=$ANDROID_HOME/cmdline-tools/tools/bin/:$PATH
+export PATH=$ANDROID_HOME/emulator/:$PATH
+export PATH=$ANDROID_HOME/platform-tools/:$PATH
+\end{lstlisting}
+
+Close the text editor, exit debian and log back into debian.
+\begin{lstlisting}
+exit
+proot-distro login debian
+\end{lstlisting}
+
+The following command should be able to work.
+\begin{lstlisting}
+sdkmanager
+\end{lstlisting}
+If the command was not found, then try the above steps again.
+
+Now accept the license agreement for using sdkmanager
+\begin{lstlisting}
+yes|.. 
+\end{lstlisting}
+
+You have to install a few tools using sdkmanager to fully be able to start developing apps.
+\begin{lstlisting}
+sdkmanager --install "platform-tools" "platforms;android-34" "build-tools;35.0.0"
+\end{lstlisting}
+
+\section{Creating the android app}
+
+Create the android app by running the following script.
+\begin{lstlisting}
+./init.sh
+\end{lstlisting}
+
+Run the following command to generate the apk. Building using gradlew might take a while for the first time (around 10 minutes). Subsequent builds will be much faster.
+\begin{lstlisting}
+./gradlew assembleDebug
+\end{lstlisting}
+
+The apk will be generated. This can be executed by simply opening the apk in the file manager of your choice. To copy the apk into the sdcard the following command can be used.
+
+\begin{lstlisting}
+cp app/build/generated/outputs/apk/debug/app-debug.apk /scard/
+\end{lstlisting}
+
+The script in the beginning of this section is for making a general app using Webviews. 
+
+For making a calculator app (without the backend), copy the code in the following link and paste it into the index.html file generated using the script.
+\begin{lstlisting}
+cd app/src/main/....../
+wget ......
+\end{lstlisting}
+
+The HTML file consists of the front-end part and it was implemented using bootstrap and some vanilla javascript. It is being run on the WebView component which is in the native android app.
+
+\section{Running the server}
+Just compile and execute the C code which will host the server locally on port 8080.
+\begin{lstlisting}
+    cd backend
+    gcc main.c -o main
+    ./main
+\end{lstlisting}
+
+It is worth noting that the server needs to constantly be running in the background. Make sure you don't stop the execution of the code. You might also need to disable third-party network security apps(not necessary in most phones) to allow the server to recieve requests from outside.
+
+You can now go back into the calculator app and use it.
+
+\section{Acknowledgements}
+
+We thank Dr. GVV Sharma for inspiring and truly supporting us to pursue this project and making it possible.
+
+The steps required to install and set up Android SDK on termux, was a modified version of the steps required to set up Android SDK in general without the use of Android Studio which we found here:
+\fbox{\parbox{\linewidth}{\url{https://proandroiddev.com/how-to-setup-android-sdk-without-android-studio-6d60d0f2812a}}} 
+
+The script for creating an app with a web-view on termux was inspired by u/AddressSpiritual9574 's script for generating boilerplate code for a basic android app without the use of Android Studio.
+
+We also thank Subhodeep Chakraborty for his true support.
+
+
+\end{document}
