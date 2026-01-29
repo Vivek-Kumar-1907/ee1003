@@ -30,7 +30,7 @@
   xleftmargin=1.5em,                % indent code so numbers don’t overlap
   frame=single,
   breaklines=true,
-  breakatwhitespace=true,
+  breakatwhitespace=false,
   tabsize=2,
   showstringspaces=false,
   captionpos=b,
@@ -60,8 +60,9 @@ Set Termux up on your android device. The instructions to do so can be found her
 
 Inside debian, you will need to install a jdk (Java Development Kit) and gcc, a C Compiler.
 \begin{lstlisting}
-    pkg install openjdk-17
-    apt -get install gcc
+    apt update
+    apt install openjdk-17
+    apt-get install gcc
 \end{lstlisting}
 
 \section{Setting up Android SDK}
@@ -118,7 +119,7 @@ If the command was not found, then try the above steps again.
 
 Now accept the license agreement for using sdkmanager
 \begin{lstlisting}
-yes|.. 
+yes | sdkmanager --licenses
 \end{lstlisting}
 
 You have to install a few tools using sdkmanager to fully be able to start developing apps.
@@ -130,8 +131,13 @@ sdkmanager --install "platform-tools" "platforms;android-34" "build-tools;35.0.0
 
 Create the android app by running the following script.
 \begin{lstlisting}
+cd ~
+wget https://raw.githubusercontent.com/Vivek-Kumar-1907/ee1003/refs/heads/main/calculator/androidapp/init.sh
+chmod +x init.sh
 ./init.sh
 \end{lstlisting}
+
+The script is interactive, and you have to type the details of the app like name and package name.
 
 Run the following command to generate the apk. Building using gradlew might take a while for the first time (around 10 minutes). Subsequent builds will be much faster.
 \begin{lstlisting}
@@ -141,20 +147,24 @@ Run the following command to generate the apk. Building using gradlew might take
 The apk will be generated. This can be executed by simply opening the apk in the file manager of your choice. To copy the apk into the sdcard the following command can be used.
 
 \begin{lstlisting}
-cp app/build/generated/outputs/apk/debug/app-debug.apk /scard/
+cp app/build/outputs/apk/debug/app-debug.apk /sdcard/
 \end{lstlisting}
 
 The script in the beginning of this section is for making a general app using Webviews. 
 
 For making a calculator app (without the backend), copy the code in the following link and paste it into the index.html file generated using the script.
 \begin{lstlisting}
-cd app/src/main/....../
-wget ......
+cd app/src/main/assets
+wget https://raw.githubusercontent.com/Vivek-Kumar-1907/ee1003/refs/heads/main/calculator/androidapp/index.html
 \end{lstlisting}
+
+You will have to go back to the original directory for running gradlew again. A clean-up might be required.
 
 The HTML file consists of the front-end part and it was implemented using bootstrap and some vanilla javascript. It is being run on the WebView component which is in the native android app.
 
 \section{Running the server}
+The code for the server is available in the repository
+\fbox{\parbox{\linewidth}{\url{https://github.com/Vivek-Kumar-1907/ee1003/calculator/}}} 
 Just compile and execute the C code which will host the server locally on port 8080.
 \begin{lstlisting}
     cd backend
