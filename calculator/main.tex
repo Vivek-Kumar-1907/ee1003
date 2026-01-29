@@ -115,7 +115,7 @@ The following command should execute successfully.
 \begin{lstlisting}
 sdkmanager
 \end{lstlisting}
-If the command was not found, then repeat the above steps again.
+If the command was not found, then try repeating the above steps again.
 
 Now accept the license agreement for using sdkmanager
 \begin{lstlisting}
@@ -125,6 +125,18 @@ yes | sdkmanager --licenses
 You have to install a few tools using sdkmanager to entirely be able to start developing apps.
 \begin{lstlisting}
 sdkmanager --install "platform-tools" "platforms;android-34" "build-tools;35.0.0"
+\end{lstlisting}
+
+We now need to install aapt2 for termux (android asset packaging tool). It is important to note that we need to do this outside of proot and directly on termux.
+\begin{lstlisting}
+  exit
+  pkg install aapt2
+\end{lstlisting}
+
+We can continue the rest of the installation inside of proot now. We now need to install gradle to be able to build the apk later.
+\begin{lstlisting}
+  proot-distro login debian
+  apt install gradle
 \end{lstlisting}
 
 \section{Creating the android app}
