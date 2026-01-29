@@ -1,0 +1,1 @@
+All instructions are given in main.pdf. The androidapp directory does not contain the correct directory structure required for the android app project. It just contains the important files that needs to be changed after running the script.
