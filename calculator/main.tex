@@ -37,10 +37,10 @@
   keepspaces=true                   % preserve spacing properly
 }
 
-\title{Creating a calculator app on android}
+\title{Design and Implementation of a Calculator App on Android}
 
 \author{
-\IEEEauthorblockN{Jnanesh Satisha Karmar, Vivek Kumar}
+\IEEEauthorblockN{Jnanesh Satisha Karmar, Vivek K Kumar}
 \IEEEauthorblockA{
 Department of Electrical Engineering\\
 IIT Hyderabad\\
@@ -52,13 +52,13 @@ Email: ee25btech11029@iith.ac.in, ee25btech11062@iith.ac.in}
 \maketitle
 
 \section{Motivation}
-This project goes over the possibility of development of Android apps on Android through Termux and Android SDK. The idea is to have an android app with a webview which can load HTML strings. An endless variety of UI and functionalities can be implemented through this method. We specifically implement a full-stack calculator app in this case, with HTML, CSS and bootstrap, vanilla Javascript running on a webview in an android app on the front-end fully within the limits of an android device. We also have a local server running fully within the device, accepting requests in the backend. Here, we emphasise on the instructions to get such a calculator app running on an android device.
+This project goes over the possibility of development of Android apps on Android devices through Termux and Android SDK. The objective is to create an android application containing a webview which can load HTML strings. A wide variety of UI and functionalities can be implemented through this method. We specifically implement a full-stack calculator app in this case, with HTML, CSS and bootstrap, vanilla Javascript running on a webview in an android app on the front-end entirely within the limits of an android device. We also have a local server running entirely within the device, accepting requests in the backend.In this report we emphasise on the instructions to get such a calculator app running on an android device.
 
 \section{Prerequisites}
-Set Termux up on your android device. The instructions to do so can be found here -
+Set the Termux application up on your android device. The instructions to do so can be found here -
 \fbox{\parbox{\linewidth}{\url{https://github.com/gadepall/fwc-1}}}
 
-Inside debian, you will need to install a jdk (Java Development Kit) and gcc, a C Compiler.
+Inside debian, you will need to install a jdk (Java Development Kit) and gcc (a C Compiler).
 \begin{lstlisting}
     apt update
     apt install openjdk-17
@@ -69,7 +69,7 @@ Inside debian, you will need to install a jdk (Java Development Kit) and gcc, a 
 Download the SDK from the official Android Developers website 
 \fbox{\parbox{\linewidth}{\androidsdkurl}}
 
-Copy the link for linux platform and download it inside a folder named android preferably inside home directory in debian using
+Copy the link for linux platform and download it inside a folder named android, preferably inside home directory in debian using the following commands
 \begin{lstlisting}
 cd ~
 mkdir android
@@ -84,7 +84,7 @@ unzip commandlinetools-XXX_latest.zip
 rm commandlinetools-XXX_latest.zip
 \end{lstlisting}
 
-Now we need to slightly reorganize the folder structure. Inside android folder,
+Now, we need to slightly reorganize the folder structure. Inside the android folder, perform the following changes.
 \begin{lstlisting}
   cd cmdline-tools
   mkdir tools
@@ -105,24 +105,24 @@ export PATH=$ANDROID_HOME/emulator/:$PATH
 export PATH=$ANDROID_HOME/platform-tools/:$PATH
 \end{lstlisting}
 
-Close the text editor, exit debian and log back into debian.
+Close the text editor, exit the Debian environment, and log back into Debian.
 \begin{lstlisting}
 exit
 proot-distro login debian
 \end{lstlisting}
 
-The following command should be able to work.
+The following command should execute successfully.
 \begin{lstlisting}
 sdkmanager
 \end{lstlisting}
-If the command was not found, then try the above steps again.
+If the command was not found, then repeat the above steps again.
 
 Now accept the license agreement for using sdkmanager
 \begin{lstlisting}
 yes | sdkmanager --licenses
 \end{lstlisting}
 
-You have to install a few tools using sdkmanager to fully be able to start developing apps.
+You have to install a few tools using sdkmanager to entirely be able to start developing apps.
 \begin{lstlisting}
 sdkmanager --install "platform-tools" "platforms;android-34" "build-tools;35.0.0"
 \end{lstlisting}
@@ -139,7 +139,7 @@ chmod +x init.sh
 
 The script is interactive, and you have to type the details of the app like name and package name.
 
-Run the following command to generate the apk. Building using gradlew might take a while for the first time (around 10 minutes). Subsequent builds will be much faster.
+Run the following command to generate the APK. Building using Gradle Wrapper (gradlew) may take some time during the first run (approximately 10 minutes). Subsequent builds will be significantly faster.
 \begin{lstlisting}
 ./gradlew assembleDebug
 \end{lstlisting}
@@ -160,7 +160,8 @@ wget https://raw.githubusercontent.com/Vivek-Kumar-1907/ee1003/refs/heads/main/c
 
 You will have to go back to the original directory for running gradlew again. A clean-up might be required.
 
-The HTML file consists of the front-end part and it was implemented using bootstrap and some vanilla javascript. It is being run on the WebView component which is in the native android app.
+The HTML file represents the front-end layer of the application and is implemented using Bootstrap and vanilla JavaScript. It is rendered through the WebView component embedded in the native Android application.
+
 
 \section{Running the server}
 The code for the server is available in the repository
@@ -172,9 +173,9 @@ Just compile and execute the C code which will host the server locally on port 8
     ./main
 \end{lstlisting}
 
-It is worth noting that the server needs to constantly be running in the background. Make sure you don't stop the execution of the code. You might also need to disable third-party network security apps(not necessary in most phones) to allow the server to recieve requests from outside.
+It is worth noting that the server needs to constantly be running in the background. Make sure you don't stop the execution of the code. You might also need to disable third-party network security applications(not necessary in most phones) to allow the server to recieve requests from external sources.
 
-You can now go back into the calculator app and use it.
+You can now return back into the calculator app and use it.
 
 \section{Acknowledgements}
 
@@ -185,7 +186,7 @@ The steps required to install and set up Android SDK on termux, was a modified v
 
 The script for creating an app with a web-view on termux was inspired by u/AddressSpiritual9574 's script for generating boilerplate code for a basic android app without the use of Android Studio.
 
-We also thank Subhodeep Chakraborty for his true support.
+We also would like to thank Subhodeep Chakraborty for his true support.
 
 
 \end{document}
