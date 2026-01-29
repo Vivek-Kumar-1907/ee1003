@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html>
+ <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Calculator</title>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.1/css/fontawesome.min.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- Leave those next 4 lines if you care about users using IE8 -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body class="bg-dark bg-gradient-dark">
+    <h1 class="my-3 mx-3 text-white-50">Calculator</h1>
+    <div class = "container-sm mx-3 border border-danger w-50 bg-secondary rounded">
+      <h6 class="text-white-50 text-end m-2" id="curr">Calculator Ready!</h6>
+      <h6 class="text-white text-lg-end mx-2" id ="res">0</h6>
+    </div>
+        <div class="container-fluid my-1" role="group" aria-label=         "button-container">
+            <button type="button" class="btn btn-secondary btn-lg" id = "clear">&#xFF23;</button>
+            <button type="button" class="btn btn-secondary btn-lg" id = "lbrak">&#xFF08;</button>
+            <button type="button" class="btn btn-secondary btn-lg" id = "rbrak" >&#xFF09;</button>
+            <button type="button" class="btn btn-outline-warning btn-lg" id = "op1">&div;</button>
+            <button type="button" class="btn btn-outline-success btn-lg" id = "f1">&#x03C0;</button>
+    </div>
+        <div class="container-fluid my-1" role="group" aria-label=         "button-container">
+            <button type="button" class="btn btn-secondary btn-lg" id = "7">&#xFF17;</button>
+            <button type="button" class="btn btn-secondary btn-lg" id = "8" >&#xFF18;</button>
+            <button type="button" class="btn btn-secondary btn-lg" id = "9">&#xFF19;</button>
+            <button type="button" class="btn btn-outline-warning btn-lg" id = "op2">&times;</button>
+            <button type="button" class="btn btn-outline-success btn-lg" id = "f2">e</button>
+    </div>
+<div class="container-fluid my-1" role="group" aria-label=         "button-container">
+            <button type="button" class="btn btn-secondary btn-lg" id = "4">&#xFF14;</button>
+            <button type="button" class="btn btn-secondary btn-lg" id = "5">&#xFF15;</button>
+            <button type="button" class="btn btn-secondary btn-lg" id = "6">&#xFF16;</button>
+            <button type="button" class="btn btn-outline-warning btn-lg" id = "op3">&minus;</button>
+            <button type="button" class="btn btn-outline-success btn-lg" id = "f3">|x|</button>
+    </div>
+    <div class="container-fluid my-1" role="group" aria-label=         "button-container">
+            <button type="button" class="btn btn-secondary btn-lg" id = "1" >&#xFF11;</button>
+            <button type="button" class="btn btn-secondary btn-lg" id = "2" >&#xFF12;</button>
+            <button type="button" class="btn btn-secondary btn-lg" id = "3">&#xFF13;</button>
+            <button type="button" class="btn btn-outline-warning btn-lg" id = "op4">+</button>
+            <button type="button" class="btn btn-outline-success btn-lg" id = "f4">&#x221A;x</button>
+    </div><div class="container-fluid my-1" role="group" aria-label=         "button-container">
+            <button type="button" class="btn btn-secondary btn-lg" id = "switch">&#xFF33;</button>
+            <button type="button" class="btn btn-secondary btn-lg" id = "0">&#xFF10;</button>
+            <button type="button" class="btn btn-secondary btn-lg" id = "point">&#xFF0E;</button>
+            <button type="button" class="btn btn-outline-warning btn-lg" id = "eq">=</button>
+            <button type="button" class="btn btn-outline-success btn-lg" id = "f5">x&#x02b8;</button>
+    </div>
+
+
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery.longclicks@1.0.0/plugin/jquery.longclicks.min.js"></script>
+    <script>
+	let evalstr = [''];
+let bal = 0;
+let mode = 0;
+
+let modes = 
+    {
+        m1 : ['\u03C0', 'e', '|x|', '\u221A', 'x\u02b8'],
+        m2 : ['sin', 'cos', 'tan', 'ln', 'fac'],
+        m3 : ['arcsin', 'arccos', 'arctan', '\u03C0', 'e'],
+    };
+
+function num(a){
+    if(evalstr[evalstr.length - 1] == '' && evalstr[evalstr.length - 2] == ')'){
+        evalstr.pop();
+        evalstr.push('*');
+        evalstr.push('');
+    }
+    evalstr[evalstr.length - 1] += a;
+    console.log(evalstr);
+}
+
+function isoperator(a){
+    switch(a){
+        case '+':return 1;
+            break;
+        case '-':return 1;
+            break;
+        case '*':return 1;
+            break;
+        case '/':return 1;
+            break;
+        case '^': return 1;
+            break;
+    }
+    return 0;
+}
+
+
+
+function addpoint(){
+    if(!evalstr[evalstr.length-1].includes('.')){
+        evalstr[evalstr.length-1] += '.';
+    }
+}
+
+function addoperator(a){
+    if(evalstr.length == 1 && evalstr[0] == ''){
+	if(a!=3)
+        	return;
+	else{
+		num(0);
+	}
+    }
+    if(evalstr[evalstr.length-1] == '')
+        evalstr.pop();
+    if(evalstr[evalstr.length-1] == '('){
+	if(a!=3){
+        	evalstr.push('');
+        	return;
+	}
+	else{
+		evalstr.push('');
+		num(0);	
+	}
+    }
+    if(isoperator(evalstr[evalstr.length-1])){
+        if(evalstr[evalstr.length-2] == '(' || evalstr.length == 1){
+            evalstr.push('');
+            return;
+        }
+        evalstr.pop();
+    }
+    switch(a){
+        case 1: evalstr.push('/');
+                evalstr.push('');
+        break;
+        case 2: evalstr.push('*');
+                evalstr.push('');
+        break;
+        case 3: evalstr.push('-');
+                evalstr.push('');
+        break;
+        case 4: evalstr.push('+');
+                evalstr.push('');
+        break;
+        case 5: evalstr.push('^');
+                evalstr.push('');
+        break;
+    }
+}
+
+function addlbrak(){
+    if(evalstr.length == 1 && evalstr[0] == ''){
+        evalstr.pop();
+        evalstr.push('(');
+        evalstr.push('');
+        bal++;
+        return;
+    }
+    if(evalstr[evalstr.length-1] == '')
+        evalstr.pop();
+    if(isoperator(evalstr[evalstr.length-1]) || evalstr[evalstr.length-1] == '('){
+        evalstr.push('(');
+        evalstr.push('');
+    }
+    else{
+        evalstr.push('*');
+        evalstr.push('(');
+        evalstr.push('');
+    }
+    bal ++;
+}
+
+function addrbrak(){
+    if(bal <= 0) return;
+    if(evalstr[evalstr.length - 1] == '')
+        evalstr.pop();
+    if(evalstr[evalstr.length - 1] == '(' || isoperator(evalstr[evalstr.length - 1])){
+        evalstr.push('');
+        return;
+    }
+    evalstr.push(')');
+    evalstr.push('');
+    bal--;
+}
+
+function addconstant(c){
+    if(!isNaN(evalstr[evalstr.length-1])){
+        if(evalstr[evalstr.length-1] != '')
+            addoperator(2);
+    }
+    switch(c){
+        case 'pi': num(3.141592);
+        break;
+        case 'e': num(2.71828);
+        break;
+    }
+}
+
+function addfunc(f){
+    if(evalstr.length == 1 && evalstr[0] == ''){
+        evalstr.pop();
+        evalstr.push(f);
+        evalstr.push('(');
+        evalstr.push('');
+        bal++;
+        return;
+    }
+    if(evalstr[evalstr.length-1] == '')
+        evalstr.pop();
+    if(isoperator(evalstr[evalstr.length-1]) || evalstr[evalstr.length-1] == '('){
+        evalstr.push(f);
+        evalstr.push('(');
+        evalstr.push('');
+    }
+    else{
+        evalstr.push('*');
+        evalstr.push(f);
+        evalstr.push('(');
+        evalstr.push('');
+    }
+    bal ++;
+}
+
+function isfunc(f){
+     switch(f){
+        case 'mod':return 1;
+            break;
+        case 'root':return 1;
+            break;
+        case 'sin':return 1;
+            break;
+        case 'cos':return 1;
+            break;
+        case 'tan': return 1;
+            break;
+        case 'arcsin': return 1;
+             break;
+        case 'arccos': return 1;
+             break;
+        case 'arctan': return 1;
+             break;
+        case 'ln': return 1;
+             break;
+        case 'arccos': return 1;
+             break;
+        case 'arctan': return 1;
+             break;
+        case 'fac': return 1;
+             break;
+    }
+    return 0; 
+}
+
+function setmode(md){
+    let setstrings = [];
+    switch(md){
+        case 0: setstrings = modes.m1;
+        break;
+        case 1: setstrings = modes.m2;
+        break;
+        case 2: setstrings = modes.m3;
+        break;
+    }
+    for(let i = 0; i<5; i++)
+        $('#f' + (i+1)).text(setstrings[i]);
+}
+
+function updateBrak(){
+    bal = 0;
+    for(let i = 0; i<evalstr.length; i++){
+        if(evalstr[i] == '(')
+            bal++;
+        else if(evalstr[i] == ')')
+            bal --;
+    }
+}
+
+$("#clear").click(function(){
+    if(!isNaN(evalstr[evalstr.length-1]) && evalstr[evalstr.length - 1] > 1){
+        evalstr[evalstr.length-1] = evalstr[evalstr.length-1].substring(0, evalstr[evalstr.length - 1].length - 1);
+        return;
+    }
+    if(evalstr[evalstr.length-1] == '')
+        evalstr.pop();
+    evalstr.pop();
+    if(isfunc(evalstr[evalstr.length-1]))
+        evalstr.pop();
+    if(isoperator(evalstr[evalstr.length-1]) || evalstr[evalstr.length-1] == ')' || evalstr[evalstr.length-1] == '('){
+        evalstr.push('');
+    }
+    if(evalstr.length == 0){
+        evalstr = [''];
+    }
+    updateBrak();
+});
+
+$('#clear').dblclick(function(){
+    evalstr = [''];
+    updateBrak();
+});
+
+for(let i=0;i<=9;i++){
+    $('#'+i).click(()=>{num(i);});
+}
+
+$('#point').click(()=>{addpoint();});
+
+$(document).click(()=>{
+    let res = '';
+    for(let i = 0; i<evalstr.length; i++){
+        res += evalstr[i];
+        res += ' ';
+    }
+    console.log(res);
+    $('#curr').text(res);
+    if(res.trim().length == 0){
+        $('#curr').text("Calculator Ready!");
+    }
+});
+
+for(let i = 1; i<=4; i++){
+    $('#op'+i).click(()=>{addoperator(i);});
+}
+
+$('#lbrak').click(()=>{addlbrak();});
+$('#rbrak').click(()=>{addrbrak();});
+
+$('#switch').click(()=>{
+    mode ++;
+    if(mode > 2)
+        mode = 0;
+    setmode(mode);
+});
+
+$('#f1').click(()=>{
+    switch(mode){
+        case 0: addconstant('pi');
+        break;
+        case 1: addfunc('sin');
+        break;
+        case 2: addfunc('arcsin');
+        break;
+    }
+});
+
+$('#f2').click(()=>{
+    switch(mode){
+        case 0: addconstant('e');
+        break;
+        case 1: addfunc('cos');
+        break;
+        case 2: addfunc('arccos');
+        break;
+    }
+});
+
+$('#f3').click(()=>{
+    switch(mode){
+        case 0: addfunc('mod');
+        break;
+        case 1: addfunc('tan');
+        break;
+        case 2: addfunc('arctan');
+    }
+});
+
+$('#f4').click(()=>{
+    switch(mode){
+        case 0: addfunc('root');
+        break;
+        case 1: addfunc('ln');
+        break;
+        case 2: addconstant('pi');
+        break;
+    }
+});
+
+$('#f5').click(()=>{
+    switch(mode){
+        case 0: addoperator(5);
+        break;
+        case 1: addfunc('fac');
+        break;
+        case 2: addconstant('e');
+        break;
+    }
+});
+
+$('#eq').click(()=>{
+    let itr = 10000;
+    let itr2 = 10000;
+    if(bal > 0){
+        while(bal > 0 && itr > 0){
+            if(evalstr[evalstr.length-1] == ''){
+                    evalstr.pop();
+            }
+            while((isNaN(evalstr[evalstr.length-1]) && evalstr[evalstr.length - 1] != ')') && itr2 > 0){
+                if(isoperator(evalstr[evalstr.length-1])){
+                    evalstr.pop();
+                }
+                if(evalstr[evalstr.length - 1] == '('){
+                    evalstr.pop();
+                    bal --;
+                }
+                if(isfunc(evalstr[evalstr.length - 1])){
+                    evalstr.pop();
+                }
+                itr2 --;
+            }
+            if(bal > 0){
+                addrbrak();
+            }
+            itr --;
+        }
+    }
+	   if(evalstr[evalstr.length-1] == '')
+	    evalstr.pop();
+	   if(isoperator(evalstr[evalstr.length-1]))
+		evalstr.pop();
+    if(isNaN(evalstr[evalstr.length-1]))
+        evalstr.push('');
+    let res = '';
+    for(let i = 0; i<evalstr.length; i++){
+        res += evalstr[i];
+        res += ' ';
+    }
+    console.log(res);
+    $('#res').text(res);
+    if(res.trim().length == 0){
+        $('#res').text("0");
+    }
+    $('#res').text(res);
+
+    fetch("http://127.0.0.1:8080", {
+        method: "POST",
+        headers: {
+            "Content-Type": "text/plain",
+        },
+        body: res
+    })
+        .then(response => response.text())
+        .then(data => {
+	        $('#res').text(data);
+        })
+        .catch(err => {
+            console.error(err);
+        });
+    updateBrak();
+});	
+    </script> 
+  </body>
+</html>
